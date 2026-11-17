@@ -28,6 +28,11 @@ jobs:
           sed -i 's#samp_widgets/playerTabList.h#samp_widgets/playertablist.h#' gui/gui.h
           sed -i 's#"RGBA.h"#"rgba.h"#' game/rgba.cpp
 
+      - name: Fix duplicate native libs
+        working-directory: SAMP-Mobile-GTA-2.11/app
+        run: |
+          grep -q 'pickFirsts' build.gradle.kts || sed -i 's#jniLibs {#jniLibs {\n            pickFirsts.add("**/libbass.so")\n            pickFirsts.add("**/libbass_ssl.so")\n            pickFirsts.add("**/libc++_shared.so")#' build.gradle.kts
+
       - name: Install SDK, NDK and CMake
         run: sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0" "ndk;26.2.11394342" "cmake;3.22.1"
 
