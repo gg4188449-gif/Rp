@@ -16,14 +16,14 @@ jobs:
           java-version: 17
 
       - uses: android-actions/setup-android@v3
+        with:
+          packages: ''
 
       - name: Unzip project
         run: unzip -q ./*.zip
 
       - name: Install SDK, NDK and CMake
-        run: |
-          yes | sdkmanager --licenses > /dev/null
-          sdkmanager "platforms;android-36" "build-tools;36.0.0" "ndk;26.2.11394342" "cmake;3.22.1"
+        run: sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0" "ndk;26.2.11394342" "cmake;3.22.1"
 
       - name: Build debug APK
         working-directory: SAMP-Mobile-GTA-2.11
