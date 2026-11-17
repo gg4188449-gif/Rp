@@ -22,6 +22,12 @@ jobs:
       - name: Unzip project
         run: unzip -q ./*.zip
 
+      - name: Fix file name case (Linux is case-sensitive)
+        working-directory: SAMP-Mobile-GTA-2.11/app/src/main/cpp/samp
+        run: |
+          sed -i 's#samp_widgets/playerTabList.h#samp_widgets/playertablist.h#' gui/gui.h
+          sed -i 's#"RGBA.h"#"rgba.h"#' game/rgba.cpp
+
       - name: Install SDK, NDK and CMake
         run: sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0" "ndk;26.2.11394342" "cmake;3.22.1"
 
