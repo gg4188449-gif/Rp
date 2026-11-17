@@ -1,0 +1,37 @@
+name: Build APK from ZIP
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Unzip project
+        run: unzip -q ./*.zip
+
+      - name: Install SDK, NDK and CMake
+        run: |
+          yes | sdkmanager --licenses > /dev/null
+          sdkmanager "platforms;android-36" "build-tools;36.0.0" "ndk;26.2.11394342" "cmake;3.22.1"
+
+      - name: Build debug APK
+        working-directory: SAMP-Mobile-GTA-2.11
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: apk
+          path: SAMP-Mobile-GTA-2.11/app/build/outputs/apk/debug/*.apk
