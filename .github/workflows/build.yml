@@ -35,12 +35,12 @@ jobs:
           echo "PROJECT_DIR=$(dirname "$gradlew")" >> "$GITHUB_ENV"
           echo "Project directory: $(dirname "$gradlew")"
 
-      - uses: android-actions/setup-android@v3
-
       - name: Install SDK, NDK and CMake
         run: |
-          yes | sdkmanager --licenses > /dev/null
-          sdkmanager "platforms;android-36" "build-tools;36.0.0" "ndk;26.2.11394342" "cmake;3.22.1"
+          export JAVA_HOME="${JAVA_HOME_21_X64:-$JAVA_HOME}"
+          SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SDKM" --licenses > /dev/null || true
+          "$SDKM" "platforms;android-36" "build-tools;36.0.0" "ndk;26.2.11394342" "cmake;3.22.1"
 
       - name: Build debug APK
         run: |
